@@ -37,6 +37,11 @@ jobs:
         run: |
           curl -s http://localhost:9090/api/v1/targets | grep -o '"health":"up"' | sort | uniq -c
 
+      - name: Check Grafana is linked to Prometheus
+        run: |
+          curl -s -u admin:admin http://localhost:3000/api/datasources | grep -q "Prometheus"
+          curl -s -u admin:admin "http://localhost:3000/api/search?query=Container" | grep -q "Container Monitoring"
+
       - name: Trigger alert by stopping cAdvisor
         run: |
           docker compose stop cadvisor
