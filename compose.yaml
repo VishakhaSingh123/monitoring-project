@@ -1,4 +1,3 @@
-
 services:
   web:
     image: nginx:alpine
@@ -14,6 +13,15 @@ services:
       - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
     depends_on:
       - cadvisor
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+
   grafana:
     image: grafana/grafana:latest
     ports:
