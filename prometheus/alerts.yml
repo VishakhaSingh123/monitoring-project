@@ -1,0 +1,12 @@
+
+groups:
+  - name: container-alerts
+    rules:
+      - alert: ContainerMonitoringUnavailable
+        expr: up{job="cadvisor"} == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container metrics are unavailable"
+          description: "Prometheus cannot scrape cAdvisor."
