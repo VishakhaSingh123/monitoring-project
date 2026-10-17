@@ -1,0 +1,61 @@
+name: Monitoring Stack CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Prometheus config and alert rules
+        run: |
+          docker run --rm --entrypoint promtool \
+            -v ${{ github.workspace }}/prometheus:/etc/prometheus \
+            prom/prometheus check config /etc/prometheus/prometheus.yml
+
+      - name: Validate compose file
+        run: docker compose -f compose.yaml config -q
+
+      - name: Start the monitoring stack
+        run: docker compose -f compose.yaml up -d
+
+      - name: Wait for services
+        run: sleep 40
+
+      - name: Health checks
+        run: |
+          curl -f http://localhost:9090/-/healthy
+          curl -f http://localhost:3000/api/health
+          curl -f http://localhost:8080/healthz
+          curl -f http://localhost:8081
+
+      - name: Check Prometheus is scraping targets
+        run: |
+          curl -s http://localhost:9090/api/v1/targets | grep -o '"health":"up"' | sort | uniq -c
+
+      - name: Trigger alert by stopping cAdvisor
+        run: |
+          docker compose stop cadvisor
+          sleep 60
+          curl -s http://localhost:9090/api/v1/alerts | tee alerts.json
+          grep -q "ContainerMonitoringUnavailable" alerts.json
+
+      - name: Save logs
+        if: always()
+        run: docker compose logs > stack-logs.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monitoring-logs
+          path: |
+            stack-logs.txt
+            alerts.json
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
