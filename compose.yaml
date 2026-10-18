@@ -32,12 +32,8 @@ services:
     depends_on:
       - prometheus
 
-    cadvisor:
+  cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    command:
-      - --docker_only=true
-      - --housekeeping_interval=30s
-      - --disable_metrics=disk,diskIO,network,tcp,udp,percpu,sched,process,hugetlb,referenced_memory,cpu_topology,resctrl,advanced_tcp,memory_numa
     ports:
       - "8080:8080"
     privileged: true
