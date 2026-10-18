@@ -57,7 +57,6 @@ flowchart LR
 ├── prometheus/
 │   ├── prometheus.yml                      # scrape + alerting config
 │   └── alerts.yml                          # alert rules
-├── screenshots/                            # results
 └── compose.yaml                            # all services
 ```
 
@@ -118,17 +117,6 @@ After about 1 minute, `ContainerMonitoringUnavailable` appears as **FIRING** in 
 - Prometheus collects metrics from all targets.
 - Grafana shows live CPU and memory graphs per container on the auto-loaded dashboard.
 - Stopping cAdvisor raises the alert in Prometheus, and it is delivered to Alertmanager.
-
-### Screenshots
-
-| | |
-|---|---|
-| **Green CI pipeline** | ![CI](screenshots/01-actions-green.png) |
-| **Prometheus targets (all UP)** | ![Targets](screenshots/02-prometheus-targets.png) |
-| **Grafana dashboard** | ![Dashboard](screenshots/03-grafana-dashboard.png) |
-| **Alert firing in Prometheus** | ![Alert](screenshots/04-alert-firing.png) |
-| **Alert in Alertmanager** | ![Alertmanager](screenshots/05-alertmanager.png) |
-| **cAdvisor** | ![cAdvisor](screenshots/06-cadvisor.png) |
 
 ## Challenges and solutions
 
