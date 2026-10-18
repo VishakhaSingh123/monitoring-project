@@ -34,6 +34,9 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    command:
+      - --docker_only=true
+      - --housekeeping_interval=15s
     ports:
       - "8080:8080"
     privileged: true

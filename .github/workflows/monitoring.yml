@@ -52,7 +52,7 @@ jobs:
       - name: Trigger alert by stopping cAdvisor
         run: |
           docker compose stop cadvisor
-          sleep 60
+          sleep 90
           curl -s http://localhost:9090/api/v1/alerts | tee alerts.json
           grep -q "ContainerMonitoringUnavailable" alerts.json
 
