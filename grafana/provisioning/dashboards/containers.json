@@ -9,10 +9,11 @@
       "id": 1,
       "type": "timeseries",
       "title": "CPU usage per container",
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name!=\"\"}[1m]))",
           "legendFormat": "{{name}}"
         }
@@ -22,10 +23,11 @@
       "id": 2,
       "type": "timeseries",
       "title": "Memory usage per container",
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "container_memory_usage_bytes{name!=\"\"}",
           "legendFormat": "{{name}}"
         }
